@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web Kamera ilə Şəkil Çəkmə</title>
+</head>
+<body>
+  <h1>Web kameranızdan istifadə edərək şəkil çəkin</h1>
+  
+  <video id="video" width="640" height="480" autoplay></video>
+  <br>
+  <button id="capture">📸 Şəkil çək</button>
+  
+  <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
+  <img id="photo" src="" alt="Çəkilən şəkil" style="margin-top: 20px; width: 100%;"/>
+
+  <script>
+    const video = document.getElementById('video');
+    const captureButton = document.getElementById('capture');
+    const canvas = document.getElementById('canvas');
+    const context = canvas.getContext('2d');
+    const photo = document.getElementById('photo');
+    
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => {
+        video.srcObject = stream;
+      })
+      .catch(err => {
+        console.error('Kamera xətası:', err);
+        alert("Kameraya girişə icazə verilmədi və ya kamera tapılmadı.");
+      });
+
+    captureButton.addEventListener('click', () => {
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+      const image = canvas.toDataURL('image/png');
+      photo.src = image;
+    });
+  </script>
+</body>
+</html>
